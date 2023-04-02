@@ -1,5 +1,5 @@
 {
-    "type": "project",
+    "type": "csgo-checker",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -7,14 +7,26 @@
         "php": ">=8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "danielburger1337/steam-openid": "^1.0",
+        "doctormckay/steamid": "^1.0",
+        "doctrine/doctrine-bundle": "^2.9",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.14",
+        "nyholm/psr7": "^1.5",
         "symfony/console": "6.2.*",
+        "symfony/css-selector": "6.2.*",
+        "symfony/dom-crawler": "6.2.*",
         "symfony/dotenv": "6.2.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.2.*",
+        "symfony/http-client": "6.2.*",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/runtime": "6.2.*",
-        "symfony/yaml": "6.2.*"
-    },
-    "require-dev": {
+        "symfony/security-bundle": "6.2.*",
+        "symfony/twig-bundle": "6.2.*",
+        "symfony/yaml": "6.2.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     },
     "config": {
         "allow-plugins": {
@@ -63,5 +75,9 @@
             "allow-contrib": false,
             "require": "6.2.*"
         }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.15",
+        "symfony/maker-bundle": "^1.48"
     }
 }
