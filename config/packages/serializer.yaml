@@ -1,0 +1,7 @@
+framework:
+    serializer:
+        name_converter: 'serializer.name_converter.camel_case_to_snake_case'
+
+services:
+    Symfony\Component\Serializer\NameConverter\NameConverterInterface:
+        alias: 'serializer.name_converter.camel_case_to_snake_case'

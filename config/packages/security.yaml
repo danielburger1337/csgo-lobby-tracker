@@ -1,0 +1,32 @@
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        steam_user_provider:
+            id: App\Security\SteamUserProvider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+
+            provider: steam_user_provider
+
+            custom_authenticators:
+                - App\Security\SteamAuthenticator
+
+            logout:
+                path: app_logout
+                target: app_home
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/login, roles: PUBLIC_ACCESS }
+        # - { path: ^/, roles: IS_AUTHENTICATED }
