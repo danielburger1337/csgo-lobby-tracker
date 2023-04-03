@@ -1,0 +1,15 @@
+found_x: '%count% players were found.'
+created_successfully: The player "%steamId%" was created successfully.
+
+id_is_already_tracked: The player with id "%steamId%" is already being tracked.
+
+form:
+    steam_id:
+        label: Steam ID
+        help: Steam-ID, Vanity-URL, Profile-Link etc...
+        placeholder: https://steamcommunity.com/id/yoursupercoolid
+
+    description:
+        label: Description
+        help: A description of the player that helps you identify the player in case they change their name and/or avatar.
+        placeholder: Cheater
