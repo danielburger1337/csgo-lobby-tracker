@@ -1,0 +1,45 @@
+<div class="card shadow-sm {{ summary.miniProfile.richPresence starts with 'In Lobby' ? 'border-warning border-5' }}">
+    <img src="{{ summary.playerSummary.avatarUrl }}" height="200" width="200" class="card-img-top" alt="{{ summary.playerSummary.personaName }}" crossorigin />
+
+    <div class="card-body" style="border-top: 1px solid black;">
+        <h5 class="card-title">{{ summary.playerSummary.personaName }}</h5>
+
+        {% if summary.player.description != null %}
+            <p class="card-text">{{ summary.player.description }}</p>
+        {% endif %}
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ summary.miniProfile.gameState }} - {{ summary.miniProfile.gameName }}</li>
+        {% if summary.miniProfile.richPresence != null %}
+            <li class="list-group-item">
+                {{ summary.miniProfile.richPresence }}
+            </li>
+        {% endif %}
+    </ul>
+
+    <div class="card-body">
+        <a href="{{ summary.playerSummary.profileUrl }}" target="_blank" class="card-link">Steam</a>
+
+        <form class="d-inline" method="POST" action="{{ path('api_v1_player_delete', {playerId: summary.player.id}) }}">
+            <input type="hidden" name="_method" value="DELETE" />
+
+            <button type="submit" class="btn btn-link card-link text-danger d-inline" id="delete_player_{{summary.player.id}}">Delete</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('delete_player_{{summary.player.id}}').addEventListener('click', function(e) {
+            const parent = e.target.parentElement.parentElement.parentElement.parentElement;
+            parent.classList.add('d-none');
+
+            setTimeout(() => {
+                if (parent) {
+                    parent.remove();
+                };
+            }, 5000);
+        });
+    </script>
+</div>
+
+

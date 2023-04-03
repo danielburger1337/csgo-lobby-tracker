@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% block title %}CS:GO Lobby Tracker{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+        <link rel="stylesheet" href="/assets/bootstrap.min.css" />
+    </head>
+    <body data-bs-theme="dark" class="bg-body-tertiary">
+        {% block body %}
+            {% block navbar %}
+                <header>
+                    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" href="{{ path('app_home') }}">CS:GO Lobby Tracker</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarCollapse">
+                                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_home') }}">List</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_player_add') }}">Add a Player</a>
+                                    </li>
+                                </ul>
+
+                                <a class="btn btn-outline-success" href="{{ path('app_logout') }}">Logout</a>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            {% endblock %}
+
+            <main class="pt-5 mt-3">
+                <div class="container-fluid">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        {% endblock %}
+    </body>
+</html>
