@@ -30,6 +30,11 @@
 
     <script>
         document.getElementById('delete_player_{{summary.player.id}}').addEventListener('click', function(e) {
+            if (!confirm()) {
+                e.preventDefault();
+                return;
+            }
+
             const parent = e.target.parentElement.parentElement.parentElement.parentElement;
             parent.classList.add('d-none');
 
