@@ -1,0 +1,28 @@
+date.timezone = UTC
+session.auto_start = Off
+short_open_tag = Off
+expose_php = Off
+
+display_errors = Off
+display_startup_errors = Off
+
+memory_limit = 256M
+upload_max_filesize = 30M
+
+# http://symfony.com/doc/current/performance.html
+opcache.preload = /app/config/preload.php
+opcache.preload_user = www-data
+opcache.interned_strings_buffer = 16
+opcache.max_accelerated_files = 20000
+opcache.memory_consumption = 256
+opcache.validate_timestamps = 0
+opcache.enable_cli = 0
+
+realpath_cache_size = 4096K
+realpath_cache_ttl = 600
+
+# Preloading is incompatible with first-exec and profile triggered JIT
+# opcache.jit_buffer_size = 256mb
+# opcache.jit = 1225
+
+error_log = /proc/self/fd/2

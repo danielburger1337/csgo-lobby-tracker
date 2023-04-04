@@ -1,0 +1,64 @@
+version: '3.8'
+
+x-restart-policy: &restart_policy
+    restart: unless-stopped
+
+services:
+    redis:
+        image: redis:7
+
+        <<: *restart_policy
+
+        healthcheck:
+            test: ['CMD-SHELL', 'redis-cli ping | grep PONG']
+            interval: 60s
+            timeout: 3s
+            retries: 5
+
+        logging:
+            driver: 'none'
+
+        # volatile-lru WHEN redis_tag_aware
+        command: 'redis-server --maxmemory 100mb --maxmemory-policy allkeys-lru --save 60 1'
+
+        networks:
+            - default
+
+        volumes:
+            - redis_data:/data
+
+    csgo_lobby_tracker:
+        image: danielburger1337/csgo-lobby-tracker
+        build:
+            context: .
+
+        <<: *restart_policy
+
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '200k'
+                max-file: '3'
+
+        environment:
+            - 'APP_ENV=PROD'
+            - 'REDIS_URL=redis://redis?lazy=true'
+
+        ports:
+            - 3000:80
+
+        networks:
+            - default
+
+        depends_on:
+            - redis
+
+        volumes:
+            - 'sqllite:/app/var/data'
+
+volumes:
+    redis_data:
+    sqllite:
+
+networks:
+    default:

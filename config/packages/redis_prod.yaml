@@ -1,0 +1,22 @@
+when@prod:
+    services:
+        app.redis_provider:
+            class: Redis
+            factory: [Symfony\Component\Cache\Adapter\RedisAdapter, createConnection]
+            arguments:
+                - '%env(REDIS_URL)%'
+                - { timeout: 5 }
+
+        app.redis_session_handler:
+            class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
+            arguments:
+                - '@app.redis_provider'
+
+    framework:
+        session:
+            handler_id: app.redis_session_handler
+
+        cache:
+            app: cache.adapter.redis
+
+            default_redis_provider: app.redis_provider

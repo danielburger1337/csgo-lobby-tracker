@@ -11,4 +11,5 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     SBSEDV\Bundle\FormBundle\SBSEDVFormBundle::class => ['all' => true],
     SBSEDV\Bundle\ResponseBundle\SBSEDVResponseBundle::class => ['all' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
 ];
