@@ -90,7 +90,9 @@ class PlayerService
             }
         }
 
-        $this->playerRepository->save($player->player, true);
+        if (isset($player)) {
+            $this->playerRepository->save($player->player, true);
+        }
 
         return $data;
     }
