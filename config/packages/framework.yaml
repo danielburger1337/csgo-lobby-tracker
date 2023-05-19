@@ -35,3 +35,12 @@ framework:
                 query:
                     key: '%steam_web_api_key%'
                     format: 'json'
+
+        default_options:
+            retry_failed:
+                max_delay: 5000
+
+            timeout: 15
+
+            headers:
+                user-agent: 'CSGOLobby Tracker'
