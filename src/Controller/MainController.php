@@ -6,6 +6,7 @@ use App\Form\Type\PlayerType;
 use App\Model\TestModel;
 use App\Repository\PlayerRepository;
 use App\Service\PlayerService;
+use App\Service\SteamWebApiService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,8 +15,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 class MainController extends MyAbstractController
 {
     public function __construct(
-        private PlayerService $playerService,
-        private PlayerRepository $playerRepository
+        private readonly PlayerService $playerService,
+        private readonly PlayerRepository $playerRepository,
+        private readonly SteamWebApiService $steamWebApiService
     ) {
     }
 
@@ -43,7 +45,7 @@ class MainController extends MyAbstractController
         ]);
     }
 
-    #[Route('/add-player', name: 'app_player_add', methods: ['GET', 'POST'])]
+    #[Route('/manage-players', name: 'app_manage_players', methods: ['GET', 'POST'])]
     public function addPlayer(Request $request): Response
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED);
@@ -60,11 +62,15 @@ class MainController extends MyAbstractController
 
             $this->addFlash('success', 'The player "'.$player->getSteamId()->getSteamID64().'" was added successfully.');
 
-            return $this->redirectToRoute('app_player_add');
+            return $this->redirectToRoute('app_manage_players');
         }
 
-        return $this->render('add_player.html.twig', [
+        $trackedPlayers = $this->playerRepository->findBy(['belongsTo' => $this->getSteamUser()->getId()]);
+        $summaries = $this->steamWebApiService->fetchPlayerSummaries($trackedPlayers);
+
+        return $this->render('manage_players.html.twig', [
             'form' => $form,
+            'existing_players' => $summaries,
         ]);
     }
 }

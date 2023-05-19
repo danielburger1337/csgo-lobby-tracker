@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {{ form(form) }}
+    </div>
+
+     <hr>
+
+    {% if existing_players|length < 1 %}
+        <p class="text-danger">Not tracking any player yet.</p>
+    {% else %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for player in existing_players %}
+                <div class="col">
+                    {% include "partials/_player_list.html.twig" %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

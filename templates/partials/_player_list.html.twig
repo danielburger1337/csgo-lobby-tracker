@@ -1,0 +1,48 @@
+<div class="card shadow-sm">
+    <img src="{{ player.avatarUrl }}" height="200" width="200" class="card-img-top" alt="{{ player.personaName }}" crossorigin />
+
+    <div class="card-body" style="border-top: 1px solid black;">
+        <h5 class="card-title">{{ player.personaName }}</h5>
+
+        {% if player.player.description != null %}
+            <p class="card-text">{{ player.player.description }}</p>
+        {% endif %}
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">SteamID: {{ player.player.steamId }}</li>
+        <li class="list-group-item">Tracking since: {{ player.player.createdAt|date }}</li>
+        <li class="list-group-item">Last seen: {{ player.player.lastSeenAt == null ? 'Never' : player.player.lastSeenAt|date }}</li>
+    </ul>
+
+    <div class="card-body">
+        <a href="{{ player.profileUrl }}" target="_blank" class="card-link">Steam</a>
+        <a href="https://csgostats.gg/player/{{ player.player.steamId }}" target="_blank" class="card-link">CSGOStats</a>
+
+        <form class="d-inline" method="POST" action="{{ path('api_v1_player_delete', {playerId: player.player.id}) }}">
+            <input type="hidden" name="_method" value="DELETE" />
+
+            <button type="submit" class="btn btn-link card-link text-danger d-inline" id="delete_player_{{player.player.id}}">Delete</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('delete_player_{{player.player.id}}').addEventListener('click', function(e) {
+            if (!confirm()) {
+                e.preventDefault();
+                return;
+            }
+
+            const parent = e.target.parentElement.parentElement.parentElement.parentElement;
+            parent.classList.add('d-none');
+
+            setTimeout(() => {
+                if (parent) {
+                    parent.remove();
+                };
+            }, 5000);
+        });
+    </script>
+</div>
+
+
