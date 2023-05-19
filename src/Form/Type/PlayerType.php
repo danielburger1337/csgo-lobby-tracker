@@ -62,7 +62,9 @@ class PlayerType extends AbstractType
                 ],
             ])
 
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, [
+                'label' => 'form.submit',
+            ])
         ;
 
         $currentUser = $this->security->getUser();

@@ -13,3 +13,5 @@ form:
         label: Description
         help: A description of the player that helps you identify the player in case they change their name and/or avatar.
         placeholder: Cheater
+
+    submit: Submit
