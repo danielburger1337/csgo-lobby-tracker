@@ -20,6 +20,7 @@
 
     <div class="card-body">
         <a href="{{ summary.playerSummary.profileUrl }}" target="_blank" class="card-link">Steam</a>
+        <a href="https://csgostats.gg/player/{{ summary.player.steamId }}" target="_blank" class="card-link">CSGOStats</a>
 
         <form class="d-inline" method="POST" action="{{ path('api_v1_player_delete', {playerId: summary.player.id}) }}">
             <input type="hidden" name="_method" value="DELETE" />
