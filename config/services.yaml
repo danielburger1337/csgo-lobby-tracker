@@ -6,6 +6,8 @@
 parameters:
     steam_web_api_key: '%env(STEAM_WEB_API_KEY)%'
 
+    web_proxies: '%env(csv:WEB_PROXY)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:

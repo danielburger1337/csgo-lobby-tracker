@@ -4,23 +4,27 @@ namespace App\Service;
 
 use App\Model\MiniProfileModel;
 use SteamID\SteamID;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class MiniProfileService
 {
+    /**
+     * @param string[] $webProxies
+     */
     public function __construct(
-        private HttpClientInterface $httpClient,
+        private readonly HttpClientInterface $httpClient,
+        #[Autowire('%web_proxies%')]
+        private readonly array $webProxies
     ) {
     }
 
     public function fetchMiniProfile(string $miniProfileId, ?string $appId = null): MiniProfileModel
     {
-        $response = $this->httpClient->request('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}", [
-            'query' => [
-                'appid' => $appId ?? 'undefined',
-            ],
-        ]);
+        $response = $this->sendRequest('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}?appid=".$appId ?? 'undefined');
 
         $content = $response->getContent();
 
@@ -61,7 +65,7 @@ class MiniProfileService
 
     public function fetchMiniProfileId(SteamID $steamId): string
     {
-        $response = $this->httpClient->request('GET', "https://steamcommunity.com/profiles/{$steamId->getSteamID64()}");
+        $response = $this->sendRequest('GET', "https://steamcommunity.com/profiles/{$steamId->getSteamID64()}");
 
         $content = $response->getContent();
 
@@ -78,5 +82,28 @@ class MiniProfileService
         }
 
         return $miniProfileId;
+    }
+
+    private function sendRequest(string $method, string $url): ResponseInterface
+    {
+        $proxyCount = \count($this->webProxies);
+
+        if ($proxyCount === 0 || ($proxyCount === 1 && \random_int(1, 10) >= 5)) {
+            return $this->httpClient->request($method, $url);
+        }
+
+        $proxy = $this->webProxies[\array_rand($this->webProxies)];
+
+        $proxyUrl = \str_replace('{{url}}', \urlencode($url), $proxy);
+        $proxyUrl = \str_replace('{{method}}', \urlencode($method), $proxyUrl);
+
+        $response = $this->httpClient->request($method, $proxyUrl)->toArray();
+
+        $response = new MockResponse($response['content'], [
+            'http_code' => $response['status'],
+            'response_headers' => $response['headers'],
+        ]);
+
+        return MockResponse::fromRequest($method, $proxyUrl, [], $response);
     }
 }
