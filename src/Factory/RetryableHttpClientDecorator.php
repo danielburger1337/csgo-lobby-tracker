@@ -4,7 +4,7 @@ namespace App\Factory;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
-use Symfony\Component\DependencyInjection\Attribute\MapDecorated;
+use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpClient\DecoratorTrait;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -15,7 +15,7 @@ class RetryableHttpClientDecorator implements HttpClientInterface
     use DecoratorTrait;
 
     public function __construct(
-        #[MapDecorated]
+        #[AutowireDecorated]
         HttpClientInterface $client,
         private LoggerInterface $logger
     ) {
