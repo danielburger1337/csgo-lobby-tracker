@@ -11,17 +11,12 @@ class SteamIdType extends Type
 {
     public const NAME = 'steam_id';
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         return $platform->getStringTypeDeclarationSQL($column);
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws ConversionException
      */
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): ?SteamID
@@ -38,8 +33,6 @@ class SteamIdType extends Type
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws ConversionException
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
@@ -59,17 +52,11 @@ class SteamIdType extends Type
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return self::NAME;

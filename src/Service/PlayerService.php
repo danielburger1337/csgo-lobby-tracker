@@ -31,7 +31,7 @@ class PlayerService
         return $entity;
     }
 
-    public function createPlayer(SteamID $belongsTo, SteamID $steamID, ?string $description = null): Player
+    public function createPlayer(SteamID $belongsTo, SteamID $steamID, string $description = null): Player
     {
         $player = (new Player())
             ->setBelongsTo($belongsTo)

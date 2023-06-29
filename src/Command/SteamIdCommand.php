@@ -18,17 +18,11 @@ class SteamIdCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this->addArgument('steamid', InputArgument::REQUIRED);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $steamIdInput = $input->getArgument('steamid');

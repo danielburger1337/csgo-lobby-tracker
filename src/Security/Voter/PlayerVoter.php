@@ -15,17 +15,12 @@ class PlayerVoter extends Voter
         self::ATTRIBUTE_DELETE,
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     protected function supports(string $attribute, mixed $subject): bool
     {
         return $subject instanceof Player && \in_array($attribute, self::ATTRIBUTES, true);
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param Player $subject
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool

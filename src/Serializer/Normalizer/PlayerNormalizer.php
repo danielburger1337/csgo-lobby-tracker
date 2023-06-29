@@ -18,11 +18,9 @@ class PlayerNormalizer implements NormalizerInterface, CacheableSupportsMethodIn
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param Player $object
      */
-    public function normalize(mixed $object, ?string $format = null, array $context = []): array
+    public function normalize(mixed $object, string $format = null, array $context = []): array
     {
         /** @var array */
         $data = $this->normalizer->normalize($object, $format, $context);
@@ -37,17 +35,11 @@ class PlayerNormalizer implements NormalizerInterface, CacheableSupportsMethodIn
         return $data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof Player;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasCacheableSupportsMethod(): bool
     {
         return true;

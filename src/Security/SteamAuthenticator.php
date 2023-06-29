@@ -25,17 +25,11 @@ class SteamAuthenticator extends AbstractAuthenticator implements InteractiveAut
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(Request $request): ?bool
     {
         return $request->isMethod('GET') && $request->attributes->get('_route') === 'app_login_callback';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function authenticate(Request $request): Passport
     {
         try {
@@ -47,9 +41,6 @@ class SteamAuthenticator extends AbstractAuthenticator implements InteractiveAut
         return new SelfValidatingPassport(new UserBadge($steamId));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         if ($request->getPreferredFormat() === 'html') {
@@ -59,18 +50,12 @@ class SteamAuthenticator extends AbstractAuthenticator implements InteractiveAut
         return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function start(Request $request, ?AuthenticationException $authException = null): Response
+    public function start(Request $request, AuthenticationException $authException = null): Response
     {
         if (null !== $authException) {
             return $this->onAuthenticationFailure($request, $authException);
@@ -83,9 +68,6 @@ class SteamAuthenticator extends AbstractAuthenticator implements InteractiveAut
         return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInteractive(): bool
     {
         return true;

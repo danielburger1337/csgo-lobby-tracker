@@ -36,7 +36,7 @@ abstract class MyAbstractController extends AbstractController
      *
      * @return Response An http foundation response object.
      */
-    protected function apiResponse(TranslatableInterface|string|null $msg = null, mixed $data = [], array $errors = [], int $status = Response::HTTP_OK, array $headers = [], array $context = []): Response
+    protected function apiResponse(TranslatableInterface|string $msg = null, mixed $data = [], array $errors = [], int $status = Response::HTTP_OK, array $headers = [], array $context = []): Response
     {
         $response = new ApiResponseDto($msg, $data, $errors, $status);
 
@@ -71,7 +71,7 @@ abstract class MyAbstractController extends AbstractController
      * @param string|null $domain     The domain for the message or null to use the default
      * @param string|null $locale     The locale or null to use the default
      */
-    protected function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
+    protected function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
         /** @var TranslatorInterface $translator */
         $translator = $this->container->get('translator');
@@ -79,9 +79,6 @@ abstract class MyAbstractController extends AbstractController
         return $translator->trans($id, $parameters, $domain, $locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedServices(): array
     {
         return \array_merge(parent::getSubscribedServices(), [

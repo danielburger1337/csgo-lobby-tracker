@@ -29,25 +29,16 @@ class SteamUser implements UserInterface
         return $this->avatarUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserIdentifier(): string
     {
         return $this->steamID->getSteamID64();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoles(): array
     {
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function eraseCredentials(): void
     {
     }

@@ -18,9 +18,6 @@ class SteamUserProvider implements UserProviderInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $summary = null;
@@ -48,17 +45,11 @@ class SteamUserProvider implements UserProviderInterface
         return new SteamUser($steamId, $summary['personaname'], $summary['avatarfull']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass(string $class): bool
     {
         return \is_a($class, SteamUser::class, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user): UserInterface
     {
         return $user;

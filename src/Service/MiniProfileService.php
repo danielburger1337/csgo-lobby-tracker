@@ -22,7 +22,7 @@ class MiniProfileService
     ) {
     }
 
-    public function fetchMiniProfile(string $miniProfileId, ?string $appId = null): MiniProfileModel
+    public function fetchMiniProfile(string $miniProfileId, string $appId = null): MiniProfileModel
     {
         $response = $this->sendRequest('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}?appid=".$appId ?? 'undefined');
 

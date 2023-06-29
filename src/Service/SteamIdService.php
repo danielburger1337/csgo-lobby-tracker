@@ -18,8 +18,6 @@ class SteamIdService
     /**
      * Resolve a SteamId from a vanity url, a profile url or any steamId format.
      *
-     * @param string $url The steam id to resolve.
-     *
      * @return SteamID|null The steam Id or null if the given id is invalid.
      */
     public function resolveSteamId(string $id): ?SteamID
