@@ -3,10 +3,9 @@
 namespace App\Serializer\Normalizer;
 
 use SteamID\SteamID;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class SteamIdNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
+class SteamIdNormalizer implements NormalizerInterface
 {
     /**
      * @param SteamID $object
@@ -21,8 +20,10 @@ class SteamIdNormalizer implements NormalizerInterface, CacheableSupportsMethodI
         return $data instanceof SteamID;
     }
 
-    public function hasCacheableSupportsMethod(): bool
+    public function getSupportedTypes(?string $format): array
     {
-        return true;
+        return [
+            SteamID::class => true,
+        ];
     }
 }

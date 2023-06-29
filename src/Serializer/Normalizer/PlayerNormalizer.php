@@ -6,10 +6,9 @@ use App\Entity\Player;
 use SBSEDV\Bundle\ResponseBundle\Model\Link;
 use SBSEDV\Bundle\ResponseBundle\Model\LinkCollection;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class PlayerNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
+class PlayerNormalizer implements NormalizerInterface
 {
     public function __construct(
         #[Autowire(service: 'serializer.normalizer.object')]
@@ -40,8 +39,10 @@ class PlayerNormalizer implements NormalizerInterface, CacheableSupportsMethodIn
         return $data instanceof Player;
     }
 
-    public function hasCacheableSupportsMethod(): bool
+    public function getSupportedTypes(?string $format): array
     {
-        return true;
+        return [
+            Player::class => true,
+        ];
     }
 }
