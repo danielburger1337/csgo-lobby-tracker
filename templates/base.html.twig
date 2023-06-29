@@ -29,7 +29,21 @@
                                     </li>
                                 </ul>
 
-                                <a class="btn btn-outline-success" href="{{ path('app_logout') }}">Logout</a>
+                                <div class="dropdown">
+                                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="{{ app.user.avatarUrl }}" alt="{{ app.user.personaName }}" width="32" height="32" class="rounded-circle me-2">
+                                        <strong>{{ app.user.personaName }}</strong>
+                                    </a>
+                                    <ul class="dropdown-menu text-small shadow">
+                                        <li>
+                                            <a class="dropdown-item" target="_blank" rel="noopener noreferrer" href="https://steamcommunity.com/profiles/{{ app.user.userIdentifier }}">
+                                                Profile
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Sign out</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </nav>
