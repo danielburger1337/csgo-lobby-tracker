@@ -25,6 +25,7 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week
                 always_remember_me: true
+                signature_properties: [personaName]
 
             logout:
                 path: app_logout
