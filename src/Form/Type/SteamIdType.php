@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormEvents;
 class SteamIdType extends AbstractType
 {
     public function __construct(
-        private SteamIdService $steamIdService
+        private readonly SteamIdService $steamIdService
     ) {
     }
 

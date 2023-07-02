@@ -12,8 +12,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 class SummaryController extends MyAbstractController
 {
     public function __construct(
-        private PlayerRepository $playerRepository,
-        private PlayerService $playerService
+        private readonly PlayerRepository $playerRepository,
+        private readonly PlayerService $playerService
     ) {
     }
 

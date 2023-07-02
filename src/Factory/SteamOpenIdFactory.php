@@ -11,9 +11,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SteamOpenIdFactory
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-        private ClientInterface $httpClient,
-        private RequestFactoryInterface $requestFactory
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ClientInterface $httpClient,
+        private readonly RequestFactoryInterface $requestFactory
     ) {
     }
 

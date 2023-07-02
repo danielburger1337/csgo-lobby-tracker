@@ -13,10 +13,10 @@ use SteamID\SteamID;
 class PlayerService
 {
     public function __construct(
-        private SteamIdService $steamIdService,
-        private SteamWebApiService $steamWebApiService,
-        private MiniProfileService $miniProfileService,
-        private PlayerRepository $playerRepository,
+        private readonly SteamIdService $steamIdService,
+        private readonly SteamWebApiService $steamWebApiService,
+        private readonly MiniProfileService $miniProfileService,
+        private readonly PlayerRepository $playerRepository,
     ) {
     }
 

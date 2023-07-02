@@ -12,7 +12,7 @@ class PlayerNormalizer implements NormalizerInterface
 {
     public function __construct(
         #[Autowire(service: 'serializer.normalizer.object')]
-        private NormalizerInterface $normalizer
+        private readonly NormalizerInterface $normalizer
     ) {
     }
 

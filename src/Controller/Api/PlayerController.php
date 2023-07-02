@@ -18,8 +18,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 class PlayerController extends MyAbstractController
 {
     public function __construct(
-        private PlayerService $playerService,
-        private PlayerRepository $playerRepository
+        private readonly PlayerService $playerService,
+        private readonly PlayerRepository $playerRepository
     ) {
     }
 

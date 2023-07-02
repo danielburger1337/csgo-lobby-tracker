@@ -20,9 +20,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PlayerType extends AbstractType
 {
     public function __construct(
-        private Security $security,
-        private PlayerRepository $playerRepository,
-        private TranslatorInterface $translator
+        private readonly Security $security,
+        private readonly PlayerRepository $playerRepository,
+        private readonly TranslatorInterface $translator
     ) {
     }
 

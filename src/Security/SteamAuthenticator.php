@@ -21,8 +21,8 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 class SteamAuthenticator extends AbstractAuthenticator implements InteractiveAuthenticatorInterface, AuthenticationEntryPointInterface
 {
     public function __construct(
-        private SteamOpenID $steamOpenID,
-        private UrlGeneratorInterface $urlGenerator
+        private readonly SteamOpenID $steamOpenID,
+        private readonly UrlGeneratorInterface $urlGenerator
     ) {
     }
 
