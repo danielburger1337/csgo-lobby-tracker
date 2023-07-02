@@ -27,4 +27,4 @@ services:
     # please note that last definitions always *replace* previous ones
     danielburger1337\SteamOpenId\SteamOpenID:
         class: danielburger1337\SteamOpenId\SteamOpenID
-        factory: ['@App\Factory\SteamOpenIdFactory', 'createSteamOpenId']
+        factory: ['@App\Service\SteamOpenIdFactory', 'createSteamOpenId']

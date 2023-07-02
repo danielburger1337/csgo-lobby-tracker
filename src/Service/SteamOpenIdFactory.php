@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Factory;
+namespace App\Service;
 
 use danielburger1337\SteamOpenId\SteamOpenID;
 use Nyholm\Psr7\Uri;
