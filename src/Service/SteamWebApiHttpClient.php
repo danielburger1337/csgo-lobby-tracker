@@ -24,11 +24,16 @@ class SteamWebApiHttpClient implements HttpClientInterface
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
         // Pick a random WebAPI key
-        @$options['query']['key'] = $this->steamWebApiKeys[\array_rand($this->steamWebApiKeys)];
+        @$options['query']['key'] = $this->getRandomWebApiKey();
         $options['query']['format'] = 'json';
 
         $options['base_uri'] = 'https://api.steampowered.com';
 
         return $this->client->request($method, $url, $options);
+    }
+
+    public function getRandomWebApiKey(): string
+    {
+        return $this->steamWebApiKeys[\array_rand($this->steamWebApiKeys)];
     }
 }

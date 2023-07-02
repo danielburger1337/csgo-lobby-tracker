@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Service\SteamWebApiService;
+use App\Service\SteamWebApiHttpClient;
 use danielburger1337\SteamOpenId\SteamOpenID;
 use SteamID\SteamID;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -13,7 +13,7 @@ class SteamUserProvider implements UserProviderInterface
 {
     public function __construct(
         private readonly SteamOpenID $steamOpenID,
-        private readonly SteamWebApiService $steamWebApiService
+        private readonly SteamWebApiHttpClient $steamWebApiHttpClient
     ) {
     }
 
@@ -35,15 +35,13 @@ class SteamUserProvider implements UserProviderInterface
 
         $steamId64 = $steamId->getSteamID64();
 
-        $summaries = $this->steamWebApiService->fetchPlayerSummaries([$steamId64]);
+        $summary = $this->steamOpenID->fetchUserInfo($steamId64, $this->steamWebApiHttpClient->getRandomWebApiKey());
 
-        if (!\array_key_exists($steamId64, $summaries)) {
+        if (null === $summary) {
             throw (new UserNotFoundException())->setUserIdentifier($identifier);
         }
 
-        $summary = $summaries[$steamId];
-
-        return new SteamUser($steamId, $summary->personaName, $summary->avatarUrl);
+        return new SteamUser($steamId, $summary['personaname'], $summary['avatarfull']);
     }
 
     public function supportsClass(string $class): bool
