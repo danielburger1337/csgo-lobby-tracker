@@ -44,4 +44,4 @@ framework:
             timeout: 15
 
             headers:
-                user-agent: 'CSGOLobby Tracker'
+                user-agent: 'Spastoqué CSGOLobby Tracker'
