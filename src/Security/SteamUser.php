@@ -3,8 +3,10 @@
 namespace App\Security;
 
 use SteamID\SteamID;
+use Symfony\Component\DependencyInjection\Attribute\Exclude;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[Exclude]
 class SteamUser implements UserInterface
 {
     public function __construct(
