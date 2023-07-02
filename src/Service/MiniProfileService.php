@@ -17,7 +17,7 @@ class MiniProfileService
      */
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        #[Autowire('%web_proxies%')]
+        #[Autowire(env: 'csv:HTTP_WEB_PROXIES')]
         private readonly array $webProxies
     ) {
     }
@@ -88,7 +88,7 @@ class MiniProfileService
     {
         $proxyCount = \count($this->webProxies);
 
-        if ($proxyCount === 0 || ($proxyCount === 1 && \random_int(1, 10) >= 5)) {
+        if ($proxyCount === 0 || \random_int(1, $proxyCount + 1) === 1) {
             return $this->httpClient->request($method, $url);
         }
 
