@@ -4,12 +4,11 @@ namespace App\Service;
 
 use App\Entity\Player;
 use App\Model\PlayerSummaryModel;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SteamWebApiService
 {
     public function __construct(
-        private HttpClientInterface $steamApiClient
+        private readonly SteamWebApiHttpClient $steamWebApiHttpClient
     ) {
     }
 
@@ -41,7 +40,7 @@ class SteamWebApiService
     {
         $profileIds = \array_map(fn (Player $p) => (string) $p->getSteamId()->getSteamID64(), $players);
 
-        $response = $this->steamApiClient->request('GET', '/ISteamUser/GetPlayerSummaries/v0002', [
+        $response = $this->steamWebApiHttpClient->request('GET', '/ISteamUser/GetPlayerSummaries/v0002', [
             'query' => [
                 'steamids' => \implode(',', $profileIds),
             ],

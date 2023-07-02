@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use SteamID\SteamID;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SteamIdService
 {
@@ -11,7 +10,7 @@ class SteamIdService
     private const VANITY_URL_PREFIX = 'https://steamcommunity.com/id/';
 
     public function __construct(
-        private HttpClientInterface $steamApiClient
+        private readonly SteamWebApiHttpClient $steamWebApiHttpClient
     ) {
     }
 
@@ -46,7 +45,7 @@ class SteamIdService
         } catch (\Throwable) {
         }
 
-        $response = $this->steamApiClient->request('GET', '/ISteamUser/ResolveVanityURL/v0001', [
+        $response = $this->steamWebApiHttpClient->request('GET', '/ISteamUser/ResolveVanityURL/v0001', [
             'query' => [
                 'vanityurl' => $id,
             ],

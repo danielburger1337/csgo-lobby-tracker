@@ -29,14 +29,6 @@ framework:
         time_based_uuid_version: 7
 
     http_client:
-        scoped_clients:
-            # only requests matching scope will use these options
-            steamApi.client:
-                base_uri: https://api.steampowered.com
-                query:
-                    key: '%steam_web_api_key%'
-                    format: 'json'
-
         default_options:
             retry_failed:
                 max_delay: 5000
