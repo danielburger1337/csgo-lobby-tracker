@@ -2,9 +2,9 @@
 
 namespace App\Security;
 
+use App\Service\SteamWebApiService;
 use danielburger1337\SteamOpenId\SteamOpenID;
 use SteamID\SteamID;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -12,9 +12,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class SteamUserProvider implements UserProviderInterface
 {
     public function __construct(
-        #[Autowire('%steam_web_api_key%')]
-        private string $steamWebApiKey,
-        private SteamOpenID $steamOpenID
+        private readonly SteamOpenID $steamOpenID,
+        private readonly SteamWebApiService $steamWebApiService
     ) {
     }
 
@@ -26,23 +25,25 @@ class SteamUserProvider implements UserProviderInterface
             $steamId = new SteamID($identifier);
 
             if (!$steamId->isValid() || $steamId->type !== SteamID::TYPE_INDIVIDUAL) {
-                $steamId = null;
+                throw new \InvalidArgumentException('SteamID is not a valid "TYPE_INDIVIDUAL" id.');
             }
-        } catch (\Throwable) {
-            $steamId = null;
-        }
-
-        if (null !== $steamId) {
-            $summary = $this->steamOpenID->fetchUserInfo($steamId->getSteamID64(), $this->steamWebApiKey);
-        }
-
-        if (null === $summary) {
-            throw (new UserNotFoundException())
+        } catch (\Exception $e) {
+            throw (new UserNotFoundException(previous: $e))
                 ->setUserIdentifier($identifier)
             ;
         }
 
-        return new SteamUser($steamId, $summary['personaname'], $summary['avatarfull']);
+        $steamId64 = $steamId->getSteamID64();
+
+        $summaries = $this->steamWebApiService->fetchPlayerSummaries([$steamId64]);
+
+        if (!\array_key_exists($steamId64, $summaries)) {
+            throw (new UserNotFoundException())->setUserIdentifier($identifier);
+        }
+
+        $summary = $summaries[$steamId];
+
+        return new SteamUser($steamId, $summary->personaName, $summary->avatarUrl);
     }
 
     public function supportsClass(string $class): bool
