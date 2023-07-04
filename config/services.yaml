@@ -6,6 +6,9 @@
 parameters:
     .container.dumper.inline_factories: true
 
+    app.cache_ttl.player_summaries: PT15S
+    app.cache_ttl.miniprofile: PT15S
+
 services:
     # default configuration for services in *this* file
     _defaults:

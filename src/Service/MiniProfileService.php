@@ -21,14 +21,16 @@ class MiniProfileService
         private readonly CacheInterface $cache,
         private readonly HttpClientInterface $httpClient,
         #[Autowire(env: 'csv:HTTP_WEB_PROXIES')]
-        private readonly array $webProxies
+        private readonly array $webProxies,
+        #[Autowire(param: 'app.cache_ttl.miniprofile')]
+        private readonly string $cacheTtl
     ) {
     }
 
     public function fetchMiniProfile(string $miniProfileId, string $appId = null): MiniProfileModel
     {
         return $this->cache->get('miniprofile_'.$miniProfileId, function (ItemInterface $item) use ($miniProfileId, $appId) {
-            $item->expiresAfter(new \DateInterval('PT15S'));
+            $item->expiresAfter(new \DateInterval($this->cacheTtl));
 
             $response = $this->sendRequest('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}?appid=".$appId ?? 'undefined');
 

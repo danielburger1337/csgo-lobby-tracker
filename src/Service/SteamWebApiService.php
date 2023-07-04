@@ -4,11 +4,17 @@ namespace App\Service;
 
 use App\Entity\Player;
 use App\Model\PlayerSummaryModel;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class SteamWebApiService
 {
     public function __construct(
-        private readonly SteamWebApiHttpClient $steamWebApiHttpClient
+        private readonly SteamWebApiHttpClient $steamWebApiHttpClient,
+        private readonly CacheInterface $cache,
+        #[Autowire(param: 'app.cache_ttl.player_summaries')]
+        private readonly string $cacheTtl
     ) {
     }
 
@@ -38,28 +44,33 @@ class SteamWebApiService
      */
     private function doFetchPlayerSummaries(array $players): array
     {
-        $profileIds = \array_map(fn (Player $p) => (string) $p->getSteamId()->getSteamID64(), $players);
+        $steamIds = \array_map(fn (Player $p) => (string) $p->getSteamId()->getSteamID64(), $players);
+        $steamIds = \implode(',', $steamIds);
 
-        $response = $this->steamWebApiHttpClient->request('GET', '/ISteamUser/GetPlayerSummaries/v0002', [
-            'query' => [
-                'steamids' => \implode(',', $profileIds),
-            ],
-        ])->toArray();
+        return $this->cache->get('player_summaries_'.\sha1($steamIds), function (ItemInterface $item) use ($steamIds, $players) {
+            $item->expiresAfter(new \DateInterval($this->cacheTtl));
 
-        $list = [];
+            $response = $this->steamWebApiHttpClient->request('GET', '/ISteamUser/GetPlayerSummaries/v0002', [
+                'query' => [
+                    'steamids' => $steamIds,
+                ],
+            ])->toArray();
 
-        foreach ($players as $player) {
-            foreach ($response['response']['players'] as $p) {
-                if ($p['steamid'] === $player->getSteamId()->getSteamID64()) {
-                    $list[$p['steamid']] = PlayerSummaryModel::fromResponse($player, $p);
+            $list = [];
 
-                    continue 2;
+            foreach ($players as $player) {
+                foreach ($response['response']['players'] as $p) {
+                    if ($p['steamid'] === $player->getSteamId()->getSteamID64()) {
+                        $list[$p['steamid']] = PlayerSummaryModel::fromResponse($player, $p);
+
+                        continue 2;
+                    }
                 }
+
+                // $list[$p['steamid']] = null;
             }
 
-            // $list[$p['steamid']] = null;
-        }
-
-        return $list;
+            return $list;
+        });
     }
 }
