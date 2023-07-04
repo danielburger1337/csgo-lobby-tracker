@@ -7,6 +7,8 @@ use SteamID\SteamID;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -16,6 +18,7 @@ class MiniProfileService
      * @param string[] $webProxies
      */
     public function __construct(
+        private readonly CacheInterface $cache,
         private readonly HttpClientInterface $httpClient,
         #[Autowire(env: 'csv:HTTP_WEB_PROXIES')]
         private readonly array $webProxies
@@ -24,43 +27,47 @@ class MiniProfileService
 
     public function fetchMiniProfile(string $miniProfileId, string $appId = null): MiniProfileModel
     {
-        $response = $this->sendRequest('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}?appid=".$appId ?? 'undefined');
+        return $this->cache->get('miniprofile_'.$miniProfileId, function (ItemInterface $item) use ($miniProfileId, $appId) {
+            $item->expiresAfter(new \DateInterval('PT30S'));
 
-        $content = $response->getContent();
+            $response = $this->sendRequest('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}?appid=".$appId ?? 'undefined');
 
-        $crawler = new Crawler($content);
+            $content = $response->getContent();
 
-        try {
-            $gameState = $crawler->filter('.miniprofile_game_details .game_state')->text();
+            $crawler = new Crawler($content);
 
-            if ($gameState === '') {
+            try {
+                $gameState = $crawler->filter('.miniprofile_game_details .game_state')->text();
+
+                if ($gameState === '') {
+                    $gameState = null;
+                }
+            } catch (\InvalidArgumentException) {
                 $gameState = null;
             }
-        } catch (\InvalidArgumentException) {
-            $gameState = null;
-        }
 
-        try {
-            $richPresence = $crawler->filter('.miniprofile_game_details .rich_presence')->text();
+            try {
+                $richPresence = $crawler->filter('.miniprofile_game_details .rich_presence')->text();
 
-            if ($richPresence === '') {
+                if ($richPresence === '') {
+                    $richPresence = null;
+                }
+            } catch (\InvalidArgumentException) {
                 $richPresence = null;
             }
-        } catch (\InvalidArgumentException) {
-            $richPresence = null;
-        }
 
-        try {
-            $gameName = $crawler->filter('.miniprofile_game_details .miniprofile_game_name')->text();
+            try {
+                $gameName = $crawler->filter('.miniprofile_game_details .miniprofile_game_name')->text();
 
-            if ($gameName === '') {
+                if ($gameName === '') {
+                    $gameName = null;
+                }
+            } catch (\InvalidArgumentException) {
                 $gameName = null;
             }
-        } catch (\InvalidArgumentException) {
-            $gameName = null;
-        }
 
-        return new MiniProfileModel($gameState, $gameName, $richPresence);
+            return new MiniProfileModel($gameState, $gameName, $richPresence);
+        });
     }
 
     public function fetchMiniProfileId(SteamID $steamId): string
