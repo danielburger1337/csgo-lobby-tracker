@@ -94,6 +94,14 @@ class PlayerService
             $this->playerRepository->save($player->player, true);
         }
 
+        \usort($data, function (TestModel $a) {
+            if (\str_starts_with($a->miniProfile->richPresence ?? '', 'In Lobby')) {
+                return -1;
+            }
+
+            return 1;
+        });
+
         return $data;
     }
 }
