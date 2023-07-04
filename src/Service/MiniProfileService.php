@@ -28,7 +28,7 @@ class MiniProfileService
     public function fetchMiniProfile(string $miniProfileId, string $appId = null): MiniProfileModel
     {
         return $this->cache->get('miniprofile_'.$miniProfileId, function (ItemInterface $item) use ($miniProfileId, $appId) {
-            $item->expiresAfter(new \DateInterval('PT30S'));
+            $item->expiresAfter(new \DateInterval('PT15S'));
 
             $response = $this->sendRequest('GET', "https://steamcommunity.com/miniprofile/{$miniProfileId}?appid=".$appId ?? 'undefined');
 
