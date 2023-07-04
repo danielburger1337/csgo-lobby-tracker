@@ -1,10 +1,13 @@
 {% extends "base.html.twig" %}
 
 {% block content %}
+    {% if steamId|default('') != '' %}
+        <h6>List of <a href="https://steamcommunity.com/profiles/{{ steamId|escape('html') }}">{{ steamId }}</h6>
+    {% endif %}
+
     {% if summaries|length < 1 %}
         <p class="text-danger">No tracked players are currently playing Counter-Strike.</p>
     {% else %}
-
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for summary in summaries %}
                 <div class="col">

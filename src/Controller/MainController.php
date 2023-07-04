@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Form\Type\PlayerType;
-use App\Model\TestModel;
 use App\Repository\PlayerRepository;
 use App\Service\PlayerService;
+use App\Service\SteamIdService;
 use App\Service\SteamWebApiService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,26 +22,22 @@ class MainController extends MyAbstractController
     }
 
     #[Route('/', name: 'app_home', methods: 'GET')]
-    public function home(): Response
+    public function home(Request $request, SteamIdService $steamIdService): Response
     {
         if (!$this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED)) {
             return $this->render('login.html.twig');
         }
 
-        $players = $this->playerRepository->findBy(['belongsTo' => $this->getSteamUser()->getId()]);
+        $steamId = $request->query->getString('steamId', $this->getSteamUser()->getUserIdentifier());
+        $steamId = $steamIdService->resolveSteamId($steamId);
+        $steamId ??= $this->getSteamUser()->getUserIdentifier();
+        $steamId = (string) $steamId;
 
-        $summaries = $this->playerService->createSummary($players);
-
-        \usort($summaries, function (TestModel $a) {
-            if (\str_starts_with($a->miniProfile->richPresence ?? '', 'In Lobby')) {
-                return -1;
-            }
-
-            return 1;
-        });
+        $players = $this->playerRepository->findBy(['belongsTo' => (string) $steamId]);
 
         return $this->render('app.html.twig', [
-            'summaries' => $summaries,
+            'summaries' => $this->playerService->createSummary($players),
+            'steamId' => $steamId === $this->getSteamUser()->getUserIdentifier() ? null : $steamId,
         ]);
     }
 
