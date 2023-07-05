@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if steamId|default('') != '' %}
-        <h6>List of <a href="https://steamcommunity.com/profiles/{{ steamId|escape('html') }}">{{ steamId }}</h6>
+        <h6>List of <a href="https://steamcommunity.com/profiles/{{ steamId|escape('html') }}">{{ steamId }}</a></h6>
     {% endif %}
 
     {% if summaries|length < 1 %}
